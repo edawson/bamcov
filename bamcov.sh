@@ -3,8 +3,8 @@ desired_cov=$2
 ## Get total number of reads
 tot=$(samtools idxstats $bam | cut -f3 | awk 'BEGIN {total=0} {total += $1} END {print total}')
 ## genome length
-#glen=3,137,144,693
-glen=1000
+#glen=3137144693
+glen=$3
 
 cov=( $(bc -l <<< "scale=5;${tot}/${glen}") )
 prop=( $(bc -l <<< "scale=2;${desired_cov}/${cov}") )
