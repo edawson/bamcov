@@ -2,7 +2,8 @@ task BAM_REDUCE_COV{
     File sampleBAM
     File sampleBAMIndex
     String samplename
-    Int cov
+    Int desiredCOV
+    Int actualCOV
     
     runtime{
         docker : "erictdawson/svdocker"
@@ -13,11 +14,11 @@ task BAM_REDUCE_COV{
 
 
     command <<<
-        bamcov.sh ${sampleBAM} ${cov}
+        bamcov_known.sh ${sampleBAM} ${desiredCOV} ${actualCOV}
     >>>
 
     output{
-        File reduced_bam = "$(basename sampleBAM .bam).${cov}X.bam"
+        File reduced_bam = "$(basename sampleBAM .bam).${desiredCOV}X.bam"
     }
 }
 
@@ -25,13 +26,15 @@ workflow BAM_COV{
     File sampleBAM
     File sampleBAMIndex
     String samplename
-    Int cov
+    Int actualCOV
+    Int desiredCOV
 
     call BAM_REDUCE_COV{
         input:
             tumorBAM=tumorBAM,
             controlBAM=controlBAM,
             samplename=samplename,
-            cov=cov
+            actualCOV=actualCOV,
+            desiredCOV=desiredCOV
     }
 }
