@@ -4,7 +4,9 @@ task BAM_REDUCE_COV{
     String samplename
     Int desiredCOV
     Int actualCOV
-    
+   
+
+    String output_name = "basename(${sampleBAM}, ".bam").${desiredCOV}X.bam"
     runtime{
         docker : "erictdawson/svdocker"
         memory : "12 GB"
@@ -18,7 +20,7 @@ task BAM_REDUCE_COV{
     >>>
 
     output{
-        File reduced_bam = "$(basename sampleBAM .bam).${desiredCOV}X.bam"
+        File reduced_bam = "${output_name}"
     }
 }
 
@@ -31,8 +33,8 @@ workflow BAM_COV{
 
     call BAM_REDUCE_COV{
         input:
-            tumorBAM=tumorBAM,
-            controlBAM=controlBAM,
+            sampleBAM=sampleBAM,
+            sampleBAMIndex=sampleBAMIndex,
             samplename=samplename,
             actualCOV=actualCOV,
             desiredCOV=desiredCOV
