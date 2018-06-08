@@ -6,7 +6,7 @@ task BAM_REDUCE_COV{
     Int actualCOV
    
 
-    String output_name = "basename(${sampleBAM}, ".bam").${desiredCOV}X.bam"
+    String output_name = basename(sampleBAM, ".bam") + "." + desiredCOV + "X.bam"
     runtime{
         docker : "erictdawson/svdocker"
         memory : "12 GB"
