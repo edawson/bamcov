@@ -1,16 +1,17 @@
-task BAM_REDUCE_COV{
+task bamRestrictTask{
     File sampleBAM
     File sampleBAMIndex
     File bedFile
     String samplename
    
-    String outname = basename(sampleBAM, ".bam") + ".restrictedTo." + bedFile + ".bam"
+    String outname = basename(sampleBAM, ".bam") + ".restrictedTo." + basename(bedFile, ".bed") + ".bam"
 
     runtime{
         docker : "erictdawson/svdocker"
-        memory : "12 GB"
-        cpu : "1"
+        memory : "4 GB"
+        cpu : "4"
         disks : "local-disk 1000 HDD"
+        preemptible : 4
     }
 
 
@@ -23,13 +24,13 @@ task BAM_REDUCE_COV{
     }
 }
 
-workflow BAM_COV{
+workflow bamRestrict{
     File sampleBAM
     File sampleBAMIndex
     File bedFile
     String samplename
 
-    call BAM_REDUCE_COV{
+    call bamRestrictTask{
         input:
             sampleBAM=sampleBAM,
             sampleBAMIndex=sampleBAMIndex,
